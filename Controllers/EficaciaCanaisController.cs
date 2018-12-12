@@ -14,11 +14,11 @@ namespace TodoApi.Controllers
     [Authorize]        
     [Route("api/[controller]")]
     [ApiController]
-      public class EficaciaCanalController : ControllerBase
+      public class EficaciaCanaisController : ControllerBase
     {
         private readonly InnovativoContext _context;
 
-        public EficaciaCanalController(InnovativoContext context)
+        public EficaciaCanaisController(InnovativoContext context)
         {
              _context = context;
         }
@@ -26,7 +26,7 @@ namespace TodoApi.Controllers
         [HttpGet("{id}")]
         public ActionResult<EficaciaCanalViewModel> GetById(int id)
         {
-            EficaciaCanalRelatorio ecr = _context.EficaciaCanalRelatorio.Find(id);
+            EficaciaCanaisRelatorio ecr = _context.EficaciaCanaisRelatorio.Find(id);
             if (ecr == null)
                 return NotFound();
 
@@ -62,12 +62,12 @@ namespace TodoApi.Controllers
         [HttpPost()]
         public IActionResult Create( EficaciaCanalViewModel ecvm)
         {
-            EficaciaCanalRelatorio ecr = new EficaciaCanalRelatorio();
+            EficaciaCanaisRelatorio ecr = new EficaciaCanaisRelatorio();
             ecr.IdCliente = ecvm.Cliente;
             ecr.Descricao = ecvm.Descricao;
             ecr.DataInicial = ecvm.DataInicial;
             ecr.DataFinal = ecvm.DataFinal;                        
-            _context.EficaciaCanalRelatorio.Add(ecr);
+            _context.EficaciaCanaisRelatorio.Add(ecr);
 
             EficaciaCanalBuscaPaga ecbp = new EficaciaCanalBuscaPaga();
             ecbp.EficaciaCanalID = ecr.ID;
@@ -117,7 +117,7 @@ namespace TodoApi.Controllers
         public ActionResult<List<EficaciaCanalRelatorioViewModel>> GetAll()
         {
             List<EficaciaCanalRelatorioViewModel> lista = new List<EficaciaCanalRelatorioViewModel>();
-            foreach(EficaciaCanalRelatorio ecr in _context.EficaciaCanalRelatorio){
+            foreach(EficaciaCanaisRelatorio ecr in _context.EficaciaCanaisRelatorio){
                 lista.Add( new EficaciaCanalRelatorioViewModel{ 
                     ID= ecr.ID,
                     Descricao=ecr.Descricao,

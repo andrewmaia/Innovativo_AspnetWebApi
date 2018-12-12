@@ -8,7 +8,7 @@ namespace Innovativo.EntityTypeConfiguration {
     public void Configure(EntityTypeBuilder<EficaciaCanalOrganico> builder){
         builder.ToTable("EficaciaCanalOrganico").HasKey(eco=> eco.ID);                        
         builder.ToTable("EficaciaCanalOrganico")
-                .HasOne(eco => eco.EficaciaCanalRelatorio)
+                .HasOne(eco => eco.EficaciaCanaisRelatorio)
                 .WithOne(ecr=> ecr.Organico);
     }
   }

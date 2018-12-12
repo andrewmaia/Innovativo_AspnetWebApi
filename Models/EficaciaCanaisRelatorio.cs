@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Innovativo.Models
 {
-    public class EficaciaCanalRelatorio
+    public class EficaciaCanaisRelatorio
     {
         public int ID { get; set; }
 

@@ -14,7 +14,7 @@ namespace Innovativo
         {
             modelBuilder.ApplyConfiguration(new ClienteConfiguration());
             modelBuilder.ApplyConfiguration(new UsuarioConfiguration());
-            modelBuilder.ApplyConfiguration(new EficaciaCanalRelatorioConfiguration());
+            modelBuilder.ApplyConfiguration(new EficaciaCanaisRelatorioConfiguration());
             modelBuilder.ApplyConfiguration(new EficaciaCanalBuscaPagaConfiguration());
             modelBuilder.ApplyConfiguration(new EficaciaCanalDiretoConfiguration());            
             modelBuilder.ApplyConfiguration(new EficaciaCanalDiretoConfiguration());                        
@@ -24,7 +24,7 @@ namespace Innovativo
 
         public DbSet<Cliente> Cliente { get; set; }        
         public DbSet<Usuario> Usuario { get; set; }                
-        public DbSet<EficaciaCanalRelatorio> EficaciaCanalRelatorio { get; set; }
+        public DbSet<EficaciaCanaisRelatorio> EficaciaCanaisRelatorio { get; set; }
         public DbSet<EficaciaCanalBuscaPaga> EficaciaCanalBuscaPaga { get; set; }   
         public DbSet<EficaciaCanalDireto> EficaciaCanalDireto { get; set; }
         public DbSet<EficaciaCanalEmail> EficaciaCanalEmail { get; set; }        

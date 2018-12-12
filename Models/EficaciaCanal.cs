@@ -8,7 +8,7 @@ namespace Innovativo.Models
         public int ID { get; set; }
 
         [ForeignKey("EficaciaCanalID")]
-        public virtual EficaciaCanalRelatorio EficaciaCanalRelatorio  { get; set; }
+        public virtual EficaciaCanaisRelatorio EficaciaCanaisRelatorio  { get; set; }
         public int EficaciaCanalID { get; set; }
         public int Visitantes { get; set; }
         public int Leads { get; set; }
