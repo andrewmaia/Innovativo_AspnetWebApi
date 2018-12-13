@@ -1,6 +1,6 @@
-namespace Innovativo.ViewModels
+namespace Innovativo.DTO
 {
-    public class UsuarioLoginViewModel
+    public class UsuarioLoginDTO
     {
         public string Usuario { get; set; }
         public string Senha { get; set; }

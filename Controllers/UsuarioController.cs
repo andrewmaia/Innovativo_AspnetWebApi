@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
 using Innovativo.Models;
-using Innovativo.ViewModels;
+using Innovativo.DTO;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.Extensions.Primitives;
 using Innovativo;
@@ -33,13 +33,13 @@ namespace TodoApi.Controllers
 
         [AllowAnonymous]
         [HttpPost("autenticar")]
-        public IActionResult Autenticar([FromBody]UsuarioLoginViewModel usvm)
+        public IActionResult Autenticar([FromBody]UsuarioLoginDTO usvm)
         {
-            Usuario usuario = Autenticar(usvm.Usuario, usvm.Senha);
+            Usuario usuario;
+            string mensagem = Autenticar(usvm.Usuario, usvm.Senha,out usuario);
 
-            if (usuario == null)
-                return BadRequest(new { message = "Usuário ou senha inválidos" });
-
+            if (mensagem != string.Empty)
+                return BadRequest(new { message = mensagem });
 
             JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
             byte[] key = Encoding.ASCII.GetBytes(_appSettings.Segredo);
@@ -63,20 +63,22 @@ namespace TodoApi.Controllers
             });
         }
 
-        public Usuario Autenticar(string email, string senha)
+        public string Autenticar(string email, string senha, out Usuario usuario)
         {
-            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(senha))
-                return null;
+            usuario =null;
 
-            var usuario = _context.Usuario.SingleOrDefault(x => x.Email == email);
+            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(senha))
+                return "Para autenticar é necessário fornecer email e senha";
+
+            usuario = _context.Usuario.SingleOrDefault(x => x.Email == email);
 
             if (usuario == null)
-                return null;
+                return string.Format("Email {0} não foi encontrado", email);
 
             if (usuario.Senha!= senha)
-                return null;
+                return string.Format("Senha incorreta",email);
 
-            return usuario;
+            return string.Empty;
         }
 
     }

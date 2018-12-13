@@ -1,8 +1,8 @@
 using System;
 
-namespace Innovativo.ViewModels
+namespace Innovativo.DTO
 {
-    public class EficaciaCanalViewModel
+    public class EficaciaCanalDTO
     {
         public int Cliente { get; set; }
         public string Descricao { get; set; }

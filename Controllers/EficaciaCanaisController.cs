@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
 using Innovativo.Models;
-using Innovativo.ViewModels;
+using Innovativo.DTO;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.Extensions.Primitives;
 using Microsoft.AspNetCore.Authorization;
@@ -24,13 +24,13 @@ namespace TodoApi.Controllers
         }
 
         [HttpGet("{id}")]
-        public ActionResult<EficaciaCanalViewModel> GetById(int id)
+        public ActionResult<EficaciaCanalDTO> GetById(int id)
         {
             EficaciaCanaisRelatorio ecr = _context.EficaciaCanaisRelatorio.Find(id);
             if (ecr == null)
                 return NotFound();
 
-            EficaciaCanalViewModel ecvm = new EficaciaCanalViewModel();
+            EficaciaCanalDTO ecvm = new EficaciaCanalDTO();
             ecvm.BuscaPagaLeads = ecr.BuscaPaga.Leads;
             ecvm.BuscaPagaOportunidades = ecr.BuscaPaga.Oportunidades;
             ecvm.BuscaPagaVendas = ecr.BuscaPaga.Vendas;
@@ -60,7 +60,7 @@ namespace TodoApi.Controllers
         } 
 
         [HttpPost()]
-        public IActionResult Create( EficaciaCanalViewModel ecvm)
+        public IActionResult Create( EficaciaCanalDTO ecvm)
         {
             EficaciaCanaisRelatorio ecr = new EficaciaCanaisRelatorio();
             ecr.IdCliente = ecvm.Cliente;
@@ -114,11 +114,11 @@ namespace TodoApi.Controllers
         }     
 
         [HttpGet]
-        public ActionResult<List<EficaciaCanalRelatorioViewModel>> GetAll()
+        public ActionResult<List<EficaciaCanalRelatorioDTO>> GetAll()
         {
-            List<EficaciaCanalRelatorioViewModel> lista = new List<EficaciaCanalRelatorioViewModel>();
+            List<EficaciaCanalRelatorioDTO> lista = new List<EficaciaCanalRelatorioDTO>();
             foreach(EficaciaCanaisRelatorio ecr in _context.EficaciaCanaisRelatorio){
-                lista.Add( new EficaciaCanalRelatorioViewModel{ 
+                lista.Add( new EficaciaCanalRelatorioDTO{ 
                     ID= ecr.ID,
                     Descricao=ecr.Descricao,
                     ClienteNomeFantasia= ecr.Cliente.NomeFantasia,

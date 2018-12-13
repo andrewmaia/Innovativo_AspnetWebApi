@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
 using Innovativo.Models;
-using Innovativo.ViewModels;
+using Innovativo.DTO;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.Extensions.Primitives;
 using Innovativo;
@@ -24,24 +24,24 @@ namespace TodoApi.Controllers
         }
 
         [HttpGet]
-        public ActionResult<List<ClienteViewModel>> GetAll()
+        public ActionResult<List<ClienteDTO>> GetAll()
         {
-            List<ClienteViewModel> lista = new List<ClienteViewModel>();
+            List<ClienteDTO> lista = new List<ClienteDTO>();
             foreach(Cliente c in _context.Cliente){
-                lista.Add( new ClienteViewModel{ ID= c.ID, NomeFantasia = c.NomeFantasia });
+                lista.Add( new ClienteDTO{ ID= c.ID, NomeFantasia = c.NomeFantasia });
             }
             return lista;
         }
 
 
         [HttpGet("{id}")]
-        public ActionResult<ClienteViewModel> GetById(int id)
+        public ActionResult<ClienteDTO> GetById(int id)
         {
             Cliente c = _context.Cliente.Find(id);
             if (c == null)
                 return NotFound();
 
-            ClienteViewModel cvm = new ClienteViewModel();
+            ClienteDTO cvm = new ClienteDTO();
             cvm.ID = c.ID;
             cvm.NomeFantasia = c.NomeFantasia;
 
@@ -49,7 +49,7 @@ namespace TodoApi.Controllers
         } 
 
         [HttpPut("{id}")]
-        public IActionResult Update(int id, ClienteViewModel cvm)
+        public IActionResult Update(int id, ClienteDTO cvm)
         {
             Cliente c = _context.Cliente.Find(id);
             if (c == null)
@@ -62,14 +62,14 @@ namespace TodoApi.Controllers
         }
 
         [HttpPost()]
-        public IActionResult Create( ClienteViewModel cvm)
+        public ActionResult<ClienteDTO> Create( ClienteDTO cvm)
         {
             Cliente c = new Cliente();
             c.NomeFantasia = cvm.NomeFantasia;
             _context.Cliente.Add(c);
             _context.SaveChanges();
-            return NoContent();
-            //return CreatedAtRoute("GetTodo", new { id = item.Id }, item);
+            cvm.ID = c.ID;
+            return cvm;
         }
     }
 }
