@@ -1,5 +1,4 @@
-﻿//Comentário do Andrew
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -15,6 +14,8 @@ using Microsoft.EntityFrameworkCore;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using Innovativo.Services;
+using Innovativo.Models;
 
 namespace Innovativo
 {
@@ -54,13 +55,14 @@ namespace Innovativo
                 {
                     OnTokenValidated = context =>
                     {
+                        var usuarioService = context.HttpContext.RequestServices.GetRequiredService<IUsuarioService>();
                         int usuarioID = int.Parse(context.Principal.Identity.Name);
-                        // var user = userService.GetById(userId);
-                        // if (user == null)
-                        // {
-                        //     // return unauthorized if user no longer exists
-                        //     context.Fail("Unauthorized");
-                        // }
+                        Usuario usuario = usuarioService.ObterPorID(usuarioID);
+                        if (usuario == null)
+                        {
+                            // return unauthorized if user no longer exists
+                            context.Fail("Unauthorized");
+                        }
                         return Task.CompletedTask;
                     }
                 };
@@ -73,7 +75,8 @@ namespace Innovativo
                     ValidateIssuer = false,
                     ValidateAudience = false
                 };
-            });                     
+            });
+            services.AddScoped<IUsuarioService, UsuarioService>();                     
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

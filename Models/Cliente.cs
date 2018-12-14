@@ -9,5 +9,6 @@ namespace Innovativo.Models
         public int ID { get; set; }
         public string NomeFantasia { get; set; }
         public virtual List<EficaciaCanaisRelatorio> EficaciaCanalRelatorioLista { get; set; }
+        public virtual List<Usuario> UsuarioLista { get; set; }
     }
 }

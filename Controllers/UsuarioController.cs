@@ -14,6 +14,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 using System;
 using Microsoft.Extensions.Options;
+using Innovativo.Services;
 
 namespace TodoApi.Controllers
 {
@@ -22,13 +23,13 @@ namespace TodoApi.Controllers
     [ApiController]
       public class UsuarioController : ControllerBase
     {
-        private readonly InnovativoContext _context;
-        private readonly AppSettings _appSettings;
+         private readonly AppSettings _appSettings;
+        private readonly IUsuarioService _usuarioService;
 
-        public UsuarioController(InnovativoContext context,IOptions<AppSettings> appSettings)
+        public UsuarioController(IOptions<AppSettings> appSettings,IUsuarioService usuarioService)
         {
-             _context = context;
-            _appSettings = appSettings.Value;
+             _appSettings = appSettings.Value;
+            _usuarioService = usuarioService;
         }
 
         [AllowAnonymous]
@@ -36,7 +37,7 @@ namespace TodoApi.Controllers
         public IActionResult Autenticar([FromBody]UsuarioLoginDTO usvm)
         {
             Usuario usuario;
-            string mensagem = Autenticar(usvm.Usuario, usvm.Senha,out usuario);
+            string mensagem = _usuarioService.Autenticar(usvm.Usuario, usvm.Senha,out usuario);
 
             if (mensagem != string.Empty)
                 return BadRequest(new { message = mensagem });
@@ -61,24 +62,6 @@ namespace TodoApi.Controllers
                 Nome = usuario.Nome,
                 Token = tokenString
             });
-        }
-
-        public string Autenticar(string email, string senha, out Usuario usuario)
-        {
-            usuario =null;
-
-            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(senha))
-                return "Para autenticar é necessário fornecer email e senha";
-
-            usuario = _context.Usuario.SingleOrDefault(x => x.Email == email);
-
-            if (usuario == null)
-                return string.Format("Email {0} não foi encontrado", email);
-
-            if (usuario.Senha!= senha)
-                return string.Format("Senha incorreta",email);
-
-            return string.Empty;
         }
 
     }
