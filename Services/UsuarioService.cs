@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Innovativo.Models;
 using Innovativo;
+using System.Text;
 
 namespace Innovativo.Services
 {
@@ -31,7 +32,8 @@ namespace Innovativo.Services
             if (usuario == null)
                 return string.Format("Email {0} não foi encontrado", email);
 
-            if (usuario.Senha!= senha)
+
+             if (usuario.Senha!= SenhaCriptografada(senha))
                 return string.Format("Senha incorreta",email);
 
             return string.Empty;
@@ -40,6 +42,16 @@ namespace Innovativo.Services
         public Usuario ObterPorID(int id)
         {
             return _context.Usuario.FirstOrDefault(x=>x.ID==id);
+        }
+
+        private string SenhaCriptografada(string senha)
+        {
+            Encoding enc = Encoding.GetEncoding(65001);
+            byte[] buffer = enc.GetBytes(senha);
+
+            var sha1 = System.Security.Cryptography.SHA1.Create();
+            var hash = sha1.ComputeHash(buffer);
+            return enc.GetString(hash);
         }
 
     }

@@ -8,6 +8,7 @@ using Microsoft.Extensions.Primitives;
 using Innovativo;
 using System.Data;
 using Microsoft.AspNetCore.Authorization;
+using System.Text;
 
 namespace TodoApi.Controllers
 {
