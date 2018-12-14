@@ -13,7 +13,7 @@ namespace TodoApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]    
+    [Authorize(Roles="adm")]   
       public class ClienteController : ControllerBase
     {
         private readonly InnovativoContext _context;

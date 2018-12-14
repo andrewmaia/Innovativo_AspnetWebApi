@@ -12,5 +12,12 @@ namespace Innovativo.Models
         public virtual Cliente Cliente  { get; set; }
         public  int? ClienteID  { get; set; }
 
+        public string ObterPapel(){
+            if (ClienteID.HasValue)
+                return "cliente";
+
+            return "adm";
+        }
+
     }
 }

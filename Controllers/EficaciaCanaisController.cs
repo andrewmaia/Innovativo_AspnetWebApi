@@ -8,19 +8,26 @@ using Microsoft.Extensions.Primitives;
 using Microsoft.AspNetCore.Authorization;
 using Innovativo;
 using System.Data;
-
+using Innovativo.Services;
 namespace TodoApi.Controllers
 {
-    [Authorize]        
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
       public class EficaciaCanaisController : ControllerBase
     {
         private readonly InnovativoContext _context;
+        private readonly IEficaciaCanaisService _eficaciaCanaisService;
+        private readonly IUsuarioService _usuarioService;        
 
-        public EficaciaCanaisController(InnovativoContext context)
+        public EficaciaCanaisController(
+            InnovativoContext context,
+            IEficaciaCanaisService eficaciaCanaisService,
+            IUsuarioService usuarioService)
         {
              _context = context;
+             _eficaciaCanaisService =eficaciaCanaisService;
+             _usuarioService= usuarioService;
         }
 
         [HttpGet("{id}")]
@@ -29,6 +36,13 @@ namespace TodoApi.Controllers
             EficaciaCanaisRelatorio ecr = _context.EficaciaCanaisRelatorio.Find(id);
             if (ecr == null)
                 return NotFound();
+
+            int usuarioID = int.Parse(HttpContext.User.Identity.Name);  
+            Usuario usuario = _usuarioService.ObterPorID(usuarioID);
+            if(usuario.ClienteID.HasValue){
+                if(ecr.IdCliente != usuario.ClienteID.Value)
+                    return Forbid();
+            }
 
             EficaciaCanalDTO ecvm = new EficaciaCanalDTO();
             ecvm.BuscaPagaLeads = ecr.BuscaPaga.Leads;
@@ -116,8 +130,9 @@ namespace TodoApi.Controllers
         [HttpGet]
         public ActionResult<List<EficaciaCanalRelatorioDTO>> GetAll()
         {
+            int usuarioID = int.Parse(HttpContext.User.Identity.Name);
             List<EficaciaCanalRelatorioDTO> lista = new List<EficaciaCanalRelatorioDTO>();
-            foreach(EficaciaCanaisRelatorio ecr in _context.EficaciaCanaisRelatorio){
+            foreach(EficaciaCanaisRelatorio ecr in _eficaciaCanaisService.SelecionarPorUsuario(usuarioID)){
                 lista.Add( new EficaciaCanalRelatorioDTO{ 
                     ID= ecr.ID,
                     Descricao=ecr.Descricao,

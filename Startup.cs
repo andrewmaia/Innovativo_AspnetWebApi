@@ -76,7 +76,8 @@ namespace Innovativo
                     ValidateAudience = false
                 };
             });
-            services.AddScoped<IUsuarioService, UsuarioService>();                     
+            services.AddScoped<IUsuarioService, UsuarioService>();             
+            services.AddScoped<IEficaciaCanaisService, EficaciaCanaisService>();                                         
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
