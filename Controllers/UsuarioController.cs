@@ -62,7 +62,8 @@ namespace TodoApi.Controllers
                 Id = usuario.ID,
                 Usuario = usuario.Email,
                 Nome = usuario.Nome,
-                Token = tokenString
+                Token = tokenString,
+                Papeis = (!usuario.ClienteID.HasValue?"admin":string.Empty)
             });
         }
 
