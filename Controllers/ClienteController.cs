@@ -9,6 +9,7 @@ using Innovativo;
 using System.Data;
 using Microsoft.AspNetCore.Authorization;
 using System.Text;
+using AutoMapper;
 
 namespace TodoApi.Controllers
 {
@@ -18,10 +19,12 @@ namespace TodoApi.Controllers
       public class ClienteController : ControllerBase
     {
         private readonly InnovativoContext _context;
+        private readonly IMapper _mapper;
 
-        public ClienteController(InnovativoContext context)
+        public ClienteController(InnovativoContext context,IMapper mapper)
         {
              _context = context;
+		    _mapper = mapper;           
         }
 
         [HttpGet]
@@ -42,10 +45,7 @@ namespace TodoApi.Controllers
             if (c == null)
                 return NotFound();
 
-            ClienteDTO cvm = new ClienteDTO();
-            cvm.ID = c.ID;
-            cvm.NomeFantasia = c.NomeFantasia;
-
+            ClienteDTO cvm = _mapper.Map<ClienteDTO>(c);
             return cvm;
         } 
 

@@ -16,6 +16,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Innovativo.Services;
 using Innovativo.Models;
+using AutoMapper;
 
 namespace Innovativo
 {
@@ -77,7 +78,8 @@ namespace Innovativo
                 };
             });
             services.AddScoped<IUsuarioService, UsuarioService>();             
-            services.AddScoped<IEficaciaCanaisService, EficaciaCanaisService>();                                         
+            services.AddScoped<IEficaciaCanaisService, EficaciaCanaisService>();        
+            services.AddAutoMapper();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

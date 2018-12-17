@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 using Innovativo;
 using System.Data;
 using Innovativo.Services;
+using AutoMapper;
 namespace TodoApi.Controllers
 {
     [Authorize]
@@ -18,16 +19,19 @@ namespace TodoApi.Controllers
     {
         private readonly InnovativoContext _context;
         private readonly IEficaciaCanaisService _eficaciaCanaisService;
-        private readonly IUsuarioService _usuarioService;        
+        private readonly IUsuarioService _usuarioService;  
+        private readonly IMapper _mapper;              
 
         public EficaciaCanaisController(
             InnovativoContext context,
             IEficaciaCanaisService eficaciaCanaisService,
-            IUsuarioService usuarioService)
+            IUsuarioService usuarioService,
+            IMapper mapper)
         {
              _context = context;
              _eficaciaCanaisService =eficaciaCanaisService;
              _usuarioService= usuarioService;
+		    _mapper = mapper;                  
         }
 
         [HttpGet("{id}")]
@@ -43,32 +47,7 @@ namespace TodoApi.Controllers
                 if(ecr.IdCliente != usuario.ClienteID.Value)
                     return Forbid();
             }
-
-            EficaciaCanalDTO ecvm = new EficaciaCanalDTO();
-            ecvm.BuscaPagaLeads = ecr.BuscaPaga.Leads;
-            ecvm.BuscaPagaOportunidades = ecr.BuscaPaga.Oportunidades;
-            ecvm.BuscaPagaVendas = ecr.BuscaPaga.Vendas;
-            ecvm.BuscaPagaVisitantes = ecr.BuscaPaga.Visitantes;
-
-            ecvm.DiretoLeads = ecr.Direto.Leads;
-            ecvm.DiretoOportunidades = ecr.Direto.Oportunidades;
-            ecvm.DiretoVendas = ecr.Direto.Vendas;
-            ecvm.DiretoVisitantes = ecr.Direto.Visitantes;
-
-            ecvm.EmailLeads = ecr.Email.Leads;
-            ecvm.EmailOportunidades = ecr.Email.Oportunidades;
-            ecvm.EmailVendas = ecr.Email.Vendas;
-            ecvm.EmailVisitantes = ecr.Email.Visitantes;
-
-            ecvm.OrganicoLeads = ecr.Organico.Leads;
-            ecvm.OrganicoOportunidades = ecr.Organico.Oportunidades;
-            ecvm.OrganicoVendas = ecr.Organico.Vendas;
-            ecvm.OrganicoVisitantes = ecr.Organico.Visitantes;
-
-            ecvm.ReferenciaLeads = ecr.Referencia.Leads;
-            ecvm.ReferenciaOportunidades= ecr.Referencia.Oportunidades;
-            ecvm.ReferenciaVendas= ecr.Referencia.Vendas;
-            ecvm.ReferenciaVisitantes = ecr.Referencia.Visitantes;
+            EficaciaCanalDTO ecvm= _mapper.Map<EficaciaCanalDTO>(ecr);            
 
             return ecvm;
         } 
