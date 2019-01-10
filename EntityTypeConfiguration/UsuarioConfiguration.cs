@@ -6,8 +6,8 @@ namespace Innovativo.EntityTypeConfiguration {
   public class UsuarioConfiguration : IEntityTypeConfiguration<Usuario> {
 
     public void Configure(EntityTypeBuilder<Usuario> builder){
-        builder.ToTable("Usuario").HasKey(c => c.ID);
-        builder.ToTable("Usuario")
+        builder.ToTable("usuario").HasKey(c => c.ID);
+        builder.ToTable("usuario")
             .HasOne(u => u.Cliente)
             .WithMany(c => c.UsuarioLista)
             .HasForeignKey(u=> u.ClienteID);                        

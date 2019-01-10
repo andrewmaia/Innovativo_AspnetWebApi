@@ -33,8 +33,8 @@ namespace Innovativo.Services
                 return string.Format("Email {0} não foi encontrado", email);
 
 
-             if (usuario.Senha!= SenhaCriptografada(senha))
-                return string.Format("Senha incorreta",email);
+            if (usuario.Senha!= senha)
+                return string.Format("Senha incorreta",email);  
 
             return string.Empty;
         }

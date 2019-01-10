@@ -6,8 +6,8 @@ namespace Innovativo.EntityTypeConfiguration {
   public class EficaciaCanaisRelatorioConfiguration : IEntityTypeConfiguration<EficaciaCanaisRelatorio> {
 
     public void Configure(EntityTypeBuilder<EficaciaCanaisRelatorio> builder){
-        builder.ToTable("EficaciaCanaisRelatorio").HasKey(ecr=> ecr.ID);
-        builder.ToTable("EficaciaCanaisRelatorio")
+        builder.ToTable("eficaciacanaisrelatorio").HasKey(ecr=> ecr.ID);
+        builder.ToTable("eficaciacanaisrelatorio")
             .HasOne(ecr => ecr.Cliente)
             .WithMany(c => c.EficaciaCanalRelatorioLista)
             .HasForeignKey(ecr=> ecr.IdCliente);

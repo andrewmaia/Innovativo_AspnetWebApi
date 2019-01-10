@@ -17,7 +17,7 @@ namespace Innovativo
             modelBuilder.ApplyConfiguration(new EficaciaCanaisRelatorioConfiguration());
             modelBuilder.ApplyConfiguration(new EficaciaCanalBuscaPagaConfiguration());
             modelBuilder.ApplyConfiguration(new EficaciaCanalDiretoConfiguration());            
-            modelBuilder.ApplyConfiguration(new EficaciaCanalDiretoConfiguration());                        
+            modelBuilder.ApplyConfiguration(new EficaciaCanalReferenciaConfiguration());                        
             modelBuilder.ApplyConfiguration(new EficaciaCanalEmailConfiguration());                                    
             modelBuilder.ApplyConfiguration(new EficaciaCanalOrganicoConfiguration());                      
         }        

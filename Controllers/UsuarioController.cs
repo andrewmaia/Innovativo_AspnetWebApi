@@ -33,6 +33,15 @@ namespace TodoApi.Controllers
         }
 
         [AllowAnonymous]
+        public ActionResult<ClienteDTO> Get()
+        {
+            ClienteDTO c = new ClienteDTO();
+            c.ID=0;
+            c.NomeFantasia = "Teste API";
+            return c;
+        }
+
+        [AllowAnonymous]
         [HttpPost("autenticar")]
         public IActionResult Autenticar([FromBody]UsuarioLoginDTO usvm)
         {

@@ -6,8 +6,8 @@ namespace Innovativo.EntityTypeConfiguration {
   public class EficaciaCanalBuscaPagaConfiguration : IEntityTypeConfiguration<EficaciaCanalBuscaPaga> {
 
     public void Configure(EntityTypeBuilder<EficaciaCanalBuscaPaga> builder){
-        builder.ToTable("EficaciaCanalBuscaPaga").HasKey(ecbp=> ecbp.ID);      
-        builder.ToTable("EficaciaCanalBuscaPaga")
+        builder.ToTable("eficaciacanalbuscapaga").HasKey(ecbp=> ecbp.ID);      
+        builder.ToTable("eficaciacanalbuscapaga")
                 .HasOne(ecbp => ecbp.EficaciaCanaisRelatorio)
                 .WithOne(ecr=> ecr.BuscaPaga);
     }

@@ -6,8 +6,8 @@ namespace Innovativo.EntityTypeConfiguration {
   public class EficaciaCanalDiretoConfiguration : IEntityTypeConfiguration<EficaciaCanalDireto> {
 
     public void Configure(EntityTypeBuilder<EficaciaCanalDireto> builder){
-        builder.ToTable("EficaciaCanalDireto").HasKey(ecd=> ecd.ID);            
-        builder.ToTable("EficaciaCanalDireto")
+        builder.ToTable("eficaciacanaldireto").HasKey(ecd=> ecd.ID);            
+        builder.ToTable("eficaciacanaldireto")
                 .HasOne(ecd => ecd.EficaciaCanaisRelatorio)
                 .WithOne(ecr=> ecr.Direto);
     }
