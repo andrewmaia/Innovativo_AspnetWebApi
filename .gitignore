@@ -1,1 +1,4 @@
 bin
+bin/Debug/netcoreapp2.1/publish/appsettings.json
+bin/Debug/netcoreapp2.1/publish/web.config
+obj/Debug/netcoreapp2.1/Innovativo.assets.cache
