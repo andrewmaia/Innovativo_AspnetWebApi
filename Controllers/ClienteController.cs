@@ -63,7 +63,7 @@ namespace TodoApi.Controllers
         }
 
         [HttpPost()]
-        public ActionResult<ClienteDTO> Create( ClienteDTO cvm)
+        public ActionResult<ClienteDTO> Create(ClienteDTO cvm)
         {
             Cliente c = new Cliente();
             c.NomeFantasia = cvm.NomeFantasia;

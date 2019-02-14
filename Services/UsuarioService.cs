@@ -4,21 +4,29 @@ using System.Linq;
 using Innovativo.Models;
 using Innovativo;
 using System.Text;
+using Innovativo.DTO;
+using AutoMapper;
 
 namespace Innovativo.Services
 {
     public interface IUsuarioService
     {
         string Autenticar(string email, string senha, out Usuario usuario);
-        Usuario ObterPorID(int id);    
+        Usuario ObterPorID(int id);
+        UsuarioDTO ObterPorIdDTO(int id); 
+        int Criar(UsuarioDTO dto);
+        List<UsuarioDTO> Listar();
+        void Alterar (int id, UsuarioDTO dto);
     }
  
     public class UsuarioService : IUsuarioService
     {
         private readonly InnovativoContext _context;
-        public UsuarioService(InnovativoContext context)
+        private readonly IMapper _mapper;
+        public UsuarioService(InnovativoContext context,IMapper mapper)
         {
              _context = context;
+             _mapper = mapper;
         }        
         public string Autenticar(string email, string senha, out Usuario usuario)
         {
@@ -44,6 +52,15 @@ namespace Innovativo.Services
             return _context.Usuario.FirstOrDefault(x=>x.ID==id);
         }
 
+        public UsuarioDTO ObterPorIdDTO(int id)
+        {
+            Usuario u = ObterPorID(id);
+            if (u==null)
+                return null;
+            
+            return _mapper.Map<UsuarioDTO>(u);
+        }
+
         private string SenhaCriptografada(string senha)
         {
             Encoding enc = Encoding.GetEncoding(65001);
@@ -52,6 +69,34 @@ namespace Innovativo.Services
             var sha1 = System.Security.Cryptography.SHA1.Create();
             var hash = sha1.ComputeHash(buffer);
             return enc.GetString(hash);
+        }
+
+        public int Criar(UsuarioDTO dto)
+        {
+            Usuario u =_mapper.Map<Usuario>(dto); 
+            _context.Usuario.Add(u);
+            _context.SaveChanges();
+            return u.ID;
+        }
+
+        public void Alterar (int id, UsuarioDTO dto)
+        {
+            Usuario u = _context.Usuario.FirstOrDefault(x=>x.ID==id);
+            if (u==null)
+                return;
+            
+            u.Nome= dto.Nome;
+            u.Email= dto.Email;
+            u.Senha = dto.Senha;
+            u.ClienteID = dto.ClienteID;
+
+            _context.Usuario.Update(u);
+            _context.SaveChanges();            
+        }
+
+        public List<UsuarioDTO> Listar()
+        {
+            return _mapper.Map<List<UsuarioDTO>>(_context.Usuario.Where(x=>x.ClienteID.HasValue).ToList());
         }
 
     }

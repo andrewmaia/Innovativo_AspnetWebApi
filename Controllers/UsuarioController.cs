@@ -18,7 +18,7 @@ using Innovativo.Services;
 
 namespace TodoApi.Controllers
 {
-    [Authorize]
+    [Authorize(Roles="adm")]
     [Route("api/[controller]")]
     [ApiController]
       public class UsuarioController : ControllerBase
@@ -32,14 +32,6 @@ namespace TodoApi.Controllers
             _usuarioService = usuarioService;
         }
 
-        [AllowAnonymous]
-        public ActionResult<ClienteDTO> Get()
-        {
-            ClienteDTO c = new ClienteDTO();
-            c.ID=0;
-            c.NomeFantasia = "Teste API";
-            return c;
-        }
 
         [AllowAnonymous]
         [HttpPost("autenticar")]
@@ -74,6 +66,36 @@ namespace TodoApi.Controllers
                 Token = tokenString,
                 Papeis = (!usuario.ClienteID.HasValue?"admin":string.Empty)
             });
+        }
+
+        [HttpPost()]
+        public ActionResult<UsuarioDTO> Create(UsuarioDTO dto)
+        {
+            dto.ID = _usuarioService.Criar(dto);
+            return dto;
+        }        
+
+        [HttpGet]
+        public ActionResult<List<UsuarioDTO>> GetAll()
+        {
+            return _usuarioService.Listar();
+        }
+
+        [HttpGet("{id}")]
+        public ActionResult<UsuarioDTO> GetById(int id)
+        {
+            UsuarioDTO dto = _usuarioService.ObterPorIdDTO(id);
+             if (dto == null)
+                return NotFound();
+
+            return dto;
+        } 
+
+        [HttpPut("{id}")]
+        public IActionResult Update(int id, UsuarioDTO dto)
+        {
+            _usuarioService.Alterar(id,dto);
+            return NoContent();
         }
 
     }

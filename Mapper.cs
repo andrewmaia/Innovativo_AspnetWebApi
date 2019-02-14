@@ -31,6 +31,23 @@ namespace Innovativo
                 .ForMember(dto =>dto.ReferenciaVendas,m=> m.MapFrom(model=>model.Referencia.Vendas))             
                 .ForMember(dto =>dto.ReferenciaVisitantes,m=> m.MapFrom(model=>model.Referencia.Visitantes))                                                              
                 ;
+
+            CreateMap<Usuario,UsuarioDTO>()
+                .ForMember(dto =>dto.ID,m=> m.MapFrom(model=>model.ID))
+                .ForMember(dto =>dto.Nome,m=> m.MapFrom(model=>model.Nome))
+                .ForMember(dto =>dto.Email,m=> m.MapFrom(model=>model.Email)) 
+                .ForMember(dto =>dto.Senha,m=> m.MapFrom(model=>model.Senha))
+                .ForMember(dto =>dto.ClienteID,m=> m.MapFrom(model=>model.ClienteID)) 
+                .ForMember(dto =>dto.ClienteDescricao,m=> m.MapFrom(model=>model.Cliente.NomeFantasia))                                                                             
+                ;
+
+            CreateMap<UsuarioDTO,Usuario>()
+                .ForMember(model =>model.ID,m=> m.MapFrom(dto=>dto.ID))
+                .ForMember(model =>model.Nome,m=> m.MapFrom(dto=>dto.Nome))
+                .ForMember(model =>model.Email,m=> m.MapFrom(dto=>dto.Email)) 
+                .ForMember(model =>model.Senha,m=> m.MapFrom(dto=>dto.Senha))
+                .ForMember(model =>model.ClienteID,m=> m.MapFrom(dto=>dto.ClienteID)) 
+                ;                                 
         }
     }
 }
