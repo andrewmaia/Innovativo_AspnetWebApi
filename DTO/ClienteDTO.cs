@@ -1,3 +1,5 @@
+using System;
+
 namespace Innovativo.DTO
 {
     public class ClienteDTO

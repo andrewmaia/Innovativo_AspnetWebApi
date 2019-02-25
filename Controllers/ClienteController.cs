@@ -10,67 +10,53 @@ using System.Data;
 using Microsoft.AspNetCore.Authorization;
 using System.Text;
 using AutoMapper;
+using Innovativo.Services;
 
-namespace TodoApi.Controllers
+namespace Innovativo.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     [Authorize(Roles="adm")]   
-      public class ClienteController : ControllerBase
+    public class ClienteController : ControllerBase
     {
-        private readonly InnovativoContext _context;
-        private readonly IMapper _mapper;
 
-        public ClienteController(InnovativoContext context,IMapper mapper)
+        private readonly IClienteService _clienteService;
+
+        public ClienteController(IClienteService clienteService)
         {
-             _context = context;
-		    _mapper = mapper;           
+            _clienteService = clienteService;
         }
 
         [HttpGet]
-        public ActionResult<List<ClienteDTO>> GetAll()
+        public ActionResult<List<ClienteDTO>> Listar()
         {
-            List<ClienteDTO> lista = new List<ClienteDTO>();
-            foreach(Cliente c in _context.Cliente){
-                lista.Add( new ClienteDTO{ ID= c.ID, NomeFantasia = c.NomeFantasia });
-            }
-            return lista;
+            return _clienteService.Listar();
         }
 
 
         [HttpGet("{id}")]
-        public ActionResult<ClienteDTO> GetById(int id)
+        public ActionResult<ClienteDTO> ObterPorID(int id)
         {
-            Cliente c = _context.Cliente.Find(id);
-            if (c == null)
+            ClienteDTO dto= _clienteService.ObterPorID(id);
+            if (dto==null)
                 return NotFound();
-
-            ClienteDTO cvm = _mapper.Map<ClienteDTO>(c);
-            return cvm;
+                
+            return dto;
         } 
 
         [HttpPut("{id}")]
-        public IActionResult Update(int id, ClienteDTO cvm)
+        public IActionResult Alterar(int id, ClienteDTO dto)
         {
-            Cliente c = _context.Cliente.Find(id);
-            if (c == null)
+            if(_clienteService.Alterar(id, dto))
+                return NoContent();
+            else
                 return NotFound();
-
-            c.NomeFantasia = cvm.NomeFantasia;
-            _context.Cliente.Update(c);
-            _context.SaveChanges();
-            return NoContent();
         }
 
         [HttpPost()]
         public ActionResult<ClienteDTO> Create(ClienteDTO cvm)
         {
-            Cliente c = new Cliente();
-            c.NomeFantasia = cvm.NomeFantasia;
-            _context.Cliente.Add(c);
-            _context.SaveChanges();
-            cvm.ID = c.ID;
-            return cvm;
+            return _clienteService.Inserir(cvm);
         }
     }
 }

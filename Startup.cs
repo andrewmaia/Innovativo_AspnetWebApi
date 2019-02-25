@@ -79,6 +79,7 @@ namespace Innovativo
             });
             services.AddScoped<IUsuarioService, UsuarioService>();             
             services.AddScoped<IEficaciaCanaisService, EficaciaCanaisService>();        
+            services.AddScoped<IClienteService, ClienteService>();
             services.AddAutoMapper();
         }
 
