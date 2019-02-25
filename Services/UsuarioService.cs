@@ -6,15 +6,20 @@ using Innovativo;
 using System.Text;
 using Innovativo.DTO;
 using AutoMapper;
+using System.IdentityModel.Tokens.Jwt;
+using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
+using System.Security.Claims;
+
 
 namespace Innovativo.Services
 {
     public interface IUsuarioService
     {
-        string Autenticar(string email, string senha, out Usuario usuario);
+        bool Autenticar(string email, string senha,out UsuarioLogadoDTO usuarioLogadoDTO , out string mensagem);
         Usuario ObterPorID(int id);
         UsuarioDTO ObterPorIdDTO(int id); 
-        int Criar(UsuarioDTO dto);
+        int Inserir(UsuarioDTO dto);
         List<UsuarioDTO> Listar();
         void Alterar (int id, UsuarioDTO dto);
     }
@@ -23,29 +28,59 @@ namespace Innovativo.Services
     {
         private readonly InnovativoContext _context;
         private readonly IMapper _mapper;
-        public UsuarioService(InnovativoContext context,IMapper mapper)
+
+         private readonly AppSettings _appSettings;        
+        public UsuarioService(InnovativoContext context,IMapper mapper,IOptions<AppSettings> appSettings)
         {
              _context = context;
              _mapper = mapper;
+            _appSettings = appSettings.Value;
         }        
-        public string Autenticar(string email, string senha, out Usuario usuario)
+
+        public bool Autenticar(string email, string senha,out UsuarioLogadoDTO usuarioLogadoDTO , out string mensagem)
         {
-            usuario =null;
+            usuarioLogadoDTO=null;
+            mensagem =string.Empty;
 
             if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(senha))
-                return "Para autenticar é necessário fornecer email e senha";
+            {
+                mensagem = "Para autenticar é necessário fornecer email e senha";
+                return false;
+            }
 
-            usuario = _context.Usuario.SingleOrDefault(x => x.Email == email);
-
+            Usuario usuario = _context.Usuario.SingleOrDefault(x => x.Email == email && x.Senha==senha);
             if (usuario == null)
-                return string.Format("Email {0} não foi encontrado", email);
+            {
+                mensagem = "Email ou senha incorretos";
+                return false;
+            }
 
+            JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
+            byte[] key = Encoding.ASCII.GetBytes(_appSettings.Segredo);
+            SecurityTokenDescriptor tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(new Claim[] 
+                {
+                    new Claim(ClaimTypes.Name, usuario.ID.ToString()),
+                    new Claim(ClaimTypes.Role, usuario.ObterPapel() )                    
+                }),
+                Expires = DateTime.UtcNow.AddDays(7),
+                
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+            };
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+            var tokenString = tokenHandler.WriteToken(token);
 
-            if (usuario.Senha!= senha)
-                return string.Format("Senha incorreta",email);  
+            usuarioLogadoDTO= new UsuarioLogadoDTO {
+                ID = usuario.ID,
+                Usuario = usuario.Email,
+                Nome = usuario.Nome,
+                Token = tokenString,
+                Papeis = (!usuario.ClienteID.HasValue?"admin":string.Empty)
+            };
 
-            return string.Empty;
-        }
+            return true;
+        }        
 
         public Usuario ObterPorID(int id)
         {
@@ -71,7 +106,7 @@ namespace Innovativo.Services
             return enc.GetString(hash);
         }
 
-        public int Criar(UsuarioDTO dto)
+        public int Inserir(UsuarioDTO dto)
         {
             Usuario u =_mapper.Map<Usuario>(dto); 
             _context.Usuario.Add(u);
