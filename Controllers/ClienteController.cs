@@ -19,7 +19,6 @@ namespace Innovativo.Controllers
     [Authorize(Roles="adm")]   
     public class ClienteController : ControllerBase
     {
-
         private readonly IClienteService _clienteService;
 
         public ClienteController(IClienteService clienteService)
@@ -54,7 +53,7 @@ namespace Innovativo.Controllers
         }
 
         [HttpPost()]
-        public ActionResult<ClienteDTO> Create(ClienteDTO cvm)
+        public ActionResult<ClienteDTO> Inserir(ClienteDTO cvm)
         {
             return _clienteService.Inserir(cvm);
         }
