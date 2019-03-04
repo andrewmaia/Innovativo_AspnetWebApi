@@ -14,6 +14,7 @@ namespace Innovativo.Services
         EficaciaCanaisRelatorio ObterPorID(int id);
         bool PodeAcessarRelatorio(EficaciaCanaisRelatorio ecr,int usuarioID);
         List<EficaciaCanalRelatorioDTO> Listar(int usuarioID);
+        EficaciaCanaisRelatorio ObterUltimoDoCliente(int usuarioID);
     }
  
     public class EficaciaCanaisService : IEficaciaCanaisService
@@ -29,6 +30,19 @@ namespace Innovativo.Services
         {
             return _context.EficaciaCanaisRelatorio.FirstOrDefault(x=>x.ID==id);
         }
+
+        public EficaciaCanaisRelatorio ObterUltimoDoCliente(int usuarioID)
+        {
+            Usuario usuario =_usuarioService.ObterPorID(usuarioID);
+            if (usuario==null)
+                return null;
+
+            if (usuario.ClienteID.HasValue)
+                return usuario.Cliente.EficaciaCanalRelatorioLista.OrderByDescending(x=>x.DataFinal).FirstOrDefault();
+            
+            return _context.EficaciaCanaisRelatorio.OrderByDescending(x=>x.DataFinal).FirstOrDefault();            
+        }
+
         public IList<EficaciaCanaisRelatorio> SelecionarPorUsuario(int usuarioID)
         {
             Usuario usuario =_usuarioService.ObterPorID(usuarioID);
@@ -118,6 +132,7 @@ namespace Innovativo.Services
             }
             return lista;            
         }
+        
 
 
     }

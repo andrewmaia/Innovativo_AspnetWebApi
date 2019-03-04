@@ -53,5 +53,12 @@ namespace TodoApi.Controllers
         {
             return _eficaciaCanaisService.Listar(int.Parse(HttpContext.User.Identity.Name));
         }
+
+        [HttpGet("ObterUltimo")]
+        public ActionResult<EficaciaCanalDTO> ObterUltimo()
+        {
+            return _mapper.Map<EficaciaCanalDTO>(_eficaciaCanaisService.ObterUltimoDoCliente(int.Parse(HttpContext.User.Identity.Name)));            
+        }
+
     }
 }
