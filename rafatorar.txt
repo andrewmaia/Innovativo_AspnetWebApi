@@ -1,0 +1,8 @@
+Controllers: Para cada metodo retornar o html status correto (olhar todos os metodos)
+Controllers: Sempre retornar DTO's
+Controllers: Usar Mapper apenas no serviço
+Verificar como transacionar Contexto
+Tratar Cors: Cross Scripting (Do jeito que está não é seguro)
+Criptografar Senha
+Configuração de Expiração do Login em Json
+Rever forma de atribuir papeis
