@@ -30,11 +30,10 @@ namespace TodoApi.Controllers
         [HttpPost("autenticar")]
         public IActionResult Autenticar([FromBody]UsuarioLoginDTO usvm)
         {
-            string mensagem;
             UsuarioLogadoDTO  ulDTO  ;
 
-            if (!_usuarioService.Autenticar(usvm.Usuario, usvm.Senha,out ulDTO ,out mensagem))
-                return BadRequest(new { message = mensagem });
+            if (!_usuarioService.Autenticar(usvm.Usuario, usvm.Senha,out ulDTO ))
+                return Unauthorized();
 
             return Ok(ulDTO);
         }

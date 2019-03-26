@@ -16,7 +16,7 @@ namespace Innovativo.Services
 {
     public interface IUsuarioService
     {
-        bool Autenticar(string email, string senha,out UsuarioLogadoDTO usuarioLogadoDTO , out string mensagem);
+        bool Autenticar(string email, string senha,out UsuarioLogadoDTO usuarioLogadoDTO );
         Usuario ObterPorID(int id);
         UsuarioDTO ObterPorIdDTO(int id); 
         int Inserir(UsuarioDTO dto);
@@ -37,21 +37,18 @@ namespace Innovativo.Services
             _appSettings = appSettings.Value;
         }        
 
-        public bool Autenticar(string email, string senha,out UsuarioLogadoDTO usuarioLogadoDTO , out string mensagem)
+        public bool Autenticar(string email, string senha,out UsuarioLogadoDTO usuarioLogadoDTO )
         {
             usuarioLogadoDTO=null;
-            mensagem =string.Empty;
 
             if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(senha))
             {
-                mensagem = "Para autenticar é necessário fornecer email e senha";
                 return false;
             }
 
             Usuario usuario = _context.Usuario.SingleOrDefault(x => x.Email == email && x.Senha==senha);
             if (usuario == null)
             {
-                mensagem = "Email ou senha incorretos";
                 return false;
             }
 
