@@ -56,13 +56,8 @@ namespace Innovativo.Services
             byte[] key = Encoding.ASCII.GetBytes(_appSettings.Segredo);
             SecurityTokenDescriptor tokenDescriptor = new SecurityTokenDescriptor
             {
-                Subject = new ClaimsIdentity(new Claim[] 
-                {
-                    new Claim(ClaimTypes.Name, usuario.ID.ToString()),
-                    new Claim(ClaimTypes.Role, usuario.ObterPapel() )                    
-                }),
+                Subject = new ClaimsIdentity(ObterClaims(usuario)),
                 Expires = DateTime.UtcNow.AddDays(7),
-                
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);
@@ -73,11 +68,22 @@ namespace Innovativo.Services
                 Usuario = usuario.Email,
                 Nome = usuario.Nome,
                 Token = tokenString,
-                Papeis = (!usuario.ClienteID.HasValue?"admin":string.Empty)
+                Papeis = usuario.ObterPapeis()
             };
 
             return true;
-        }        
+        }
+
+        private Claim[] ObterClaims(Usuario usuario)
+        {
+            List<Claim> claims = new List<Claim>();
+            claims.Add(new Claim(ClaimTypes.Name,usuario.ID.ToString()));
+            foreach (string papel in usuario.ObterPapeis())
+            {
+                claims.Add(new Claim(ClaimTypes.Role,papel));
+            }
+            return claims.ToArray();
+        }
 
         public Usuario ObterPorID(int id)
         {

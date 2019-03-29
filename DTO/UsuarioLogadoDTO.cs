@@ -8,7 +8,7 @@ namespace Innovativo.DTO
         public string Usuario { get; set; }
         public string Nome { get; set; }        
         public string Token { get; set; }                
-        public string Papeis { get; set; }                        
+        public string [] Papeis { get; set; }                        
     }
 }
 

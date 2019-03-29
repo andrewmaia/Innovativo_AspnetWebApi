@@ -13,7 +13,7 @@ using Innovativo.Services;
 
 namespace TodoApi.Controllers
 {
-    [Authorize(Roles="adm")]
+    [Authorize(Roles="admin")]
     [Route("api/[controller]")]
     [ApiController]
       public class UsuarioController : ControllerBase

@@ -16,7 +16,7 @@ namespace Innovativo.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Roles="adm")]   
+    [Authorize(Roles="admin")]   
     public class ClienteController : ControllerBase
     {
         private readonly IClienteService _clienteService;
