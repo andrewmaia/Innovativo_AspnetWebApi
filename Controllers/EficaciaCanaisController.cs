@@ -44,7 +44,11 @@ namespace TodoApi.Controllers
         [HttpPost()]
         public IActionResult Inserir(EficaciaCanalDTO dto)
         {
-            _eficaciaCanaisService.Inserir(dto);
+            string mensagem;
+            _eficaciaCanaisService.Inserir(dto, out mensagem);
+            if (mensagem!=string.Empty)
+                return Conflict(mensagem);
+
             return NoContent();
         }     
 
