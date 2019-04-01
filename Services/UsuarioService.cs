@@ -21,7 +21,7 @@ namespace Innovativo.Services
         UsuarioDTO ObterPorIdDTO(int id); 
         int Inserir(UsuarioDTO dto);
         List<UsuarioDTO> Listar();
-        void Alterar (int id, UsuarioDTO dto);
+        bool Alterar (int id, UsuarioDTO dto);
     }
  
     public class UsuarioService : IUsuarioService
@@ -117,11 +117,11 @@ namespace Innovativo.Services
             return u.ID;
         }
 
-        public void Alterar (int id, UsuarioDTO dto)
+        public bool Alterar (int id, UsuarioDTO dto)
         {
             Usuario u = _context.Usuario.FirstOrDefault(x=>x.ID==id);
             if (u==null)
-                return;
+                return false;
             
             u.Nome= dto.Nome;
             u.Email= dto.Email;
@@ -129,8 +129,10 @@ namespace Innovativo.Services
             u.ClienteID = dto.ClienteID;
 
             _context.Usuario.Update(u);
-            _context.SaveChanges();            
+            _context.SaveChanges();
+            return true;
         }
+
 
         public List<UsuarioDTO> Listar()
         {

@@ -42,7 +42,7 @@ namespace TodoApi.Controllers
         public ActionResult<UsuarioDTO> Inserir(UsuarioDTO dto)
         {
             dto.ID = _usuarioService.Inserir(dto);
-            return dto;
+            return CreatedAtAction(nameof(ObterPorID),new {id=dto.ID},dto);
         }        
 
         [HttpGet]
@@ -52,7 +52,7 @@ namespace TodoApi.Controllers
         }
 
         [HttpGet("{id}")]
-        public ActionResult<UsuarioDTO> GetById(int id)
+        public ActionResult<UsuarioDTO> ObterPorID(int id)
         {
             UsuarioDTO dto = _usuarioService.ObterPorIdDTO(id);
              if (dto == null)
@@ -62,10 +62,12 @@ namespace TodoApi.Controllers
         } 
 
         [HttpPut("{id}")]
-        public IActionResult Update(int id, UsuarioDTO dto)
+        public IActionResult Alterar(int id, UsuarioDTO dto)
         {
-            _usuarioService.Alterar(id,dto);
-            return NoContent();
+            if(_usuarioService.Alterar(id, dto))
+                return NoContent();
+            else
+                return NotFound();
         }
 
     }

@@ -45,11 +45,11 @@ namespace TodoApi.Controllers
         public IActionResult Inserir(EficaciaCanalDTO dto)
         {
             string mensagem;
-            _eficaciaCanaisService.Inserir(dto, out mensagem);
+            int id=_eficaciaCanaisService.Inserir(dto, out mensagem);
             if (mensagem!=string.Empty)
                 return Conflict(mensagem);
 
-            return NoContent();
+            return CreatedAtAction(nameof(ObterPorID),new {id=id},dto);
         }     
 
         [HttpGet]

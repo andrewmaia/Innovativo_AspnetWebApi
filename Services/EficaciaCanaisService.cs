@@ -10,7 +10,7 @@ namespace Innovativo.Services
     public interface IEficaciaCanaisService
     {
         IList<EficaciaCanaisRelatorio> SelecionarPorUsuario(int usuarioID);
-        void Inserir(EficaciaCanalDTO dto,out string mensagem);
+        int Inserir(EficaciaCanalDTO dto,out string mensagem);
         EficaciaCanaisRelatorio ObterPorID(int id);
         bool PodeAcessarRelatorio(EficaciaCanaisRelatorio ecr,int usuarioID);
         List<EficaciaCanalRelatorioDTO> Listar(int usuarioID);
@@ -65,13 +65,13 @@ namespace Innovativo.Services
             return true;
         }
 
-        public void Inserir(EficaciaCanalDTO dto,out string mensagem)
+        public int Inserir(EficaciaCanalDTO dto,out string mensagem)
         {
             if(!ValidarData(dto, out mensagem))
-                return;
+                return 0;
 
             if(!ValidarValoresCanais(dto, out mensagem))
-                return;
+                return 0;
 
             EficaciaCanaisRelatorio ecr = new EficaciaCanaisRelatorio();
             ecr.IdCliente = dto.Cliente;
@@ -121,6 +121,7 @@ namespace Innovativo.Services
             _context.EficaciaCanalReferencia.Add(ecref);            
 
             _context.SaveChanges();
+            return ecr.ID;
         }
 
         private bool ValidarData(EficaciaCanalDTO dto,out string mensagem)

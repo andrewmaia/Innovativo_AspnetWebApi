@@ -55,7 +55,8 @@ namespace Innovativo.Controllers
         [HttpPost()]
         public ActionResult<ClienteDTO> Inserir(ClienteDTO cvm)
         {
-            return _clienteService.Inserir(cvm);
+            ClienteDTO c =_clienteService.Inserir(cvm);
+            return CreatedAtAction(nameof(ObterPorID),new {id=c.ID},c);
         }
     }
 }

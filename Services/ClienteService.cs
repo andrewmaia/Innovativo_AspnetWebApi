@@ -39,7 +39,7 @@ namespace Innovativo.Services
 
         public bool Alterar (int id,ClienteDTO dto)
         {
-            Cliente c = _context.Cliente.Find(id);
+            Cliente c = _context.Cliente.FirstOrDefault(x=>x.ID==id);
             if (c == null)
                 return false;
 
