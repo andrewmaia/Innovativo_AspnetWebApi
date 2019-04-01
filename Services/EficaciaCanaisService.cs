@@ -67,7 +67,9 @@ namespace Innovativo.Services
 
         public void Inserir(EficaciaCanalDTO dto,out string mensagem)
         {
-            
+            if(!ValidarData(dto, out mensagem))
+                return;
+
             if(!ValidarValoresCanais(dto, out mensagem))
                 return;
 
@@ -120,6 +122,27 @@ namespace Innovativo.Services
 
             _context.SaveChanges();
         }
+
+        private bool ValidarData(EficaciaCanalDTO dto,out string mensagem)
+        {
+            mensagem =string.Empty;
+            if(dto.DataInicial>dto.DataFinal)
+            {
+                mensagem = "Data Inicial não pode ser maior que a Data Final";
+                return false;
+            }
+
+            if(_context.EficaciaCanaisRelatorio.Any(x=>
+                  ((dto.DataInicial >= x.DataInicial && dto.DataInicial<=x.DataFinal)||(dto.DataFinal >= x.DataInicial &&  dto.DataFinal<=x.DataFinal) || (dto.DataInicial< x.DataInicial && dto.DataFinal> x.DataFinal))
+                && dto.Cliente == x.Cliente.ID)
+            )
+            {
+                mensagem = "Já existe um relatório para o período informado";
+                return false;
+            }
+
+            return true;
+        }        
         
         private bool ValidarValoresCanais(EficaciaCanalDTO dto,out string mensagem)
         {
