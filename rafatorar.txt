@@ -5,4 +5,3 @@ Verificar como transacionar Contexto
 Tratar Cors: Cross Scripting (Do jeito que está não é seguro)
 Criptografar Senha
 Configuração de Expiração do Login em Json
-Rever forma de atribuir papeis
