@@ -1,4 +1,3 @@
-Configuração de Expiração do Login em Json
 Controllers: Usar Mapper apenas no serviço
 Verificar como transacionar Contexto
 Criptografar Senha
