@@ -1,4 +1,3 @@
 Controllers: Usar Mapper apenas no serviço
-Verificar como transacionar Contexto
 Criptografar Senha
 Tratar Cors: Cross Scripting (Do jeito que está não é seguro)
