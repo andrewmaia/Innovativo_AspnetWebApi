@@ -17,28 +17,24 @@ namespace TodoApi.Controllers
     [ApiController]
       public class EficaciaCanaisController : ControllerBase
     {
-        private readonly IEficaciaCanaisService _eficaciaCanaisService;
-        private readonly IMapper _mapper;              
+        private readonly IEficaciaCanaisService _eficaciaCanaisService;        
 
-        public EficaciaCanaisController(
-            IEficaciaCanaisService eficaciaCanaisService,
-            IMapper mapper)
+        public EficaciaCanaisController(IEficaciaCanaisService eficaciaCanaisService)
         {
              _eficaciaCanaisService =eficaciaCanaisService;
-		    _mapper = mapper;                  
         }
 
         [HttpGet("{id}")]
         public ActionResult<EficaciaCanalDTO> ObterPorID(int id)
         {
-            EficaciaCanaisRelatorio ecr = _eficaciaCanaisService.ObterPorID(id);
+            EficaciaCanalDTO ecr = _eficaciaCanaisService.ObterPorID(id);
             if (ecr == null)
                 return NotFound();
 
             if(!_eficaciaCanaisService.PodeAcessarRelatorio(ecr,int.Parse(HttpContext.User.Identity.Name)))
                 return Forbid();
 
-            return _mapper.Map<EficaciaCanalDTO>(ecr);
+            return ecr;
         } 
 
         [HttpPost()]
@@ -61,7 +57,7 @@ namespace TodoApi.Controllers
         [HttpGet("ObterUltimo")]
         public ActionResult<EficaciaCanalDTO> ObterUltimo()
         {
-            return _mapper.Map<EficaciaCanalDTO>(_eficaciaCanaisService.ObterUltimoDoCliente(int.Parse(HttpContext.User.Identity.Name)));            
+            return _eficaciaCanaisService.ObterUltimoDoCliente(int.Parse(HttpContext.User.Identity.Name));            
         }
 
     }
