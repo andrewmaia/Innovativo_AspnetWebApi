@@ -10,6 +10,7 @@ using System.IdentityModel.Tokens.Jwt;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
+using System.Security.Cryptography;
 
 
 namespace Innovativo.Services
@@ -42,15 +43,11 @@ namespace Innovativo.Services
             usuarioLogadoDTO=null;
 
             if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(senha))
-            {
                 return false;
-            }
 
-            Usuario usuario = _context.Usuario.SingleOrDefault(x => x.Email == email && x.Senha==senha);
+            Usuario usuario = _context.Usuario.SingleOrDefault(x => x.Email == email && Convert.ToBase64String(x.Senha)==Convert.ToBase64String(SenhaCriptografada(senha)));
             if (usuario == null)
-            {
                 return false;
-            }
 
             JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
             byte[] key = Encoding.ASCII.GetBytes(_appSettings.Segredo);
@@ -99,19 +96,20 @@ namespace Innovativo.Services
             return _mapper.Map<UsuarioDTO>(u);
         }
 
-        private string SenhaCriptografada(string senha)
+        private byte[] SenhaCriptografada(string senha)
         {
             Encoding enc = Encoding.GetEncoding(65001);
             byte[] buffer = enc.GetBytes(senha);
 
-            var sha1 = System.Security.Cryptography.SHA1.Create();
-            var hash = sha1.ComputeHash(buffer);
-            return enc.GetString(hash);
+            SHA1 sha1 = SHA1.Create();
+            return sha1.ComputeHash(buffer);
         }
+        
 
         public int Inserir(UsuarioDTO dto)
         {
-            Usuario u =_mapper.Map<Usuario>(dto); 
+            Usuario u =_mapper.Map<Usuario>(dto);
+            u.Senha = SenhaCriptografada(dto.Senha);
             _context.Usuario.Add(u);
             _context.SaveChanges();
             return u.ID;
@@ -125,8 +123,10 @@ namespace Innovativo.Services
             
             u.Nome= dto.Nome;
             u.Email= dto.Email;
-            u.Senha = dto.Senha;
             u.ClienteID = dto.ClienteID;
+
+            if(!String.IsNullOrEmpty(dto.Senha))
+                u.Senha = SenhaCriptografada(dto.Senha);
 
             _context.Usuario.Update(u);
             _context.SaveChanges();
