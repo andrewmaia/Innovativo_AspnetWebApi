@@ -1,1 +1,0 @@
-Tratar Cors: Cross Scripting (Do jeito que está não é seguro)

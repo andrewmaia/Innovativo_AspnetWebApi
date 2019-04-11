@@ -17,6 +17,7 @@ using Microsoft.IdentityModel.Tokens;
 using Innovativo.Services;
 using Innovativo.Models;
 using AutoMapper;
+using Microsoft.AspNetCore.Cors.Infrastructure;
 
 namespace Innovativo
 {
@@ -95,16 +96,39 @@ namespace Innovativo
             {
                 app.UseHsts();
             }
-            app.UseCors(builder =>
-                builder
-                    .AllowAnyOrigin()
-                    .AllowAnyMethod()
-                    .AllowAnyHeader()
-                    .AllowCredentials()
-            ); 
+            ConfigurarCors(app,false);
             app.UseAuthentication();
             app.UseHttpsRedirection();
             app.UseMvc();
+
+        }
+
+        private void ConfigurarCors(IApplicationBuilder app, bool habilitarTudo)
+        {
+            CorsPolicyBuilder cp = new CorsPolicyBuilder();
+            if(habilitarTudo)
+            {
+                app.UseCors(builder =>
+                    builder
+                        .AllowAnyOrigin()
+                        .AllowAnyMethod()
+                        .AllowAnyHeader()
+                        .AllowCredentials()
+                ); 
+            }
+            else
+            {
+                app.UseCors(builder =>
+                    builder
+                    .WithOrigins("http://marketing62.tempsite.ws")
+                        .AllowAnyHeader()
+                        .AllowAnyMethod()
+                        .AllowAnyHeader()
+                        .AllowCredentials()
+                ); 
+            }
+
+            app.UseCors(builder=>builder=cp); 
         }
     }
 }
