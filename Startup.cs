@@ -96,7 +96,7 @@ namespace Innovativo
             {
                 app.UseHsts();
             }
-            ConfigurarCors(app,false);
+            ConfigurarCors(app,true);
             app.UseAuthentication();
             app.UseHttpsRedirection();
             app.UseMvc();
